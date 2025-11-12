@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PlayPauseButton: View {
     @State private var isPlaying = false
+    
 
     var body: some View {
             Button(action: { isPlaying.toggle() }) {

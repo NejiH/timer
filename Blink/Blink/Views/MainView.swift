@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct MainView: View {
+    var viewModel = TimerViewModel()
+    
     var body: some View {
         VStack {
-            Spacer()
-            PlayPauseButton()
+            TimerView(viewModel: viewModel)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-
         .overlay(alignment: .topTrailing) {
             HStack(spacing: 8) {
-                ResetButton()
+                ResetButton(viewModel: viewModel)
                 MenuButton()
             }
             .padding(.trailing, 70)

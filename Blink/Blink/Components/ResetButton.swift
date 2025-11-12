@@ -9,11 +9,14 @@ import SwiftUI
 
 struct ResetButton: View {
     
+    var viewModel: TimerViewModel
+  
 
     var body: some View {
         
             Button(action:
-                    { //Logique reset timer
+                    { viewModel.timeRemaining = viewModel.concentrationDuration
+                viewModel.isRunning = false
                 
             }) {
                 ZStack {
@@ -35,6 +38,6 @@ struct ResetButton: View {
             .resizable()
             .scaledToFill()
             .ignoresSafeArea()
-        ResetButton()
+        ResetButton(viewModel: TimerViewModel())
     }
 }
