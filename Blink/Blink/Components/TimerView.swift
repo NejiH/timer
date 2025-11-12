@@ -10,16 +10,15 @@ import SwiftUI
 struct TimerView: View {
     
     var viewModel: TimerViewModel
+    @Bindable var audioManager = AudioManager.shared
 
     var body: some View {
         ZStack {
             VStack(spacing: 16) {
-                // Phase Concentration - Pause
                 Text(viewModel.estEnPause ? "Pause" : "Concentration")
-                    .font(.headline)
-                    .foregroundStyle(viewModel.estEnPause ? .green : .red)
+                    .font(.custom("Bebas Neue", size: 50))
+                    .foregroundStyle(viewModel.estEnPause ? .green : .white)
 
-                // Temps
                 Text(viewModel.formatTemps(temps: viewModel.timeRemaining))
                     .font(.custom("Bebas Neue", size: 120))
                     .foregroundColor(.white)
@@ -28,10 +27,20 @@ struct TimerView: View {
 
                 HStack(spacing: 12) {
                     Button(action: {
-                        if viewModel.isRunning {
+                        if viewModel.isRunning  {
                             viewModel.mettreEnPause()
+                            audioManager.pause()
+                                
+                            
                         } else {
                             viewModel.demarrer()
+                            
+                            if audioManager.audioPlayer == nil {
+                                audioManager.play(music: "music")
+                            } else {
+                                audioManager.togglePlayPause()
+                            }
+
                         }
                         
                     }) {
@@ -46,27 +55,11 @@ struct TimerView: View {
                         }
                     }
                     .buttonStyle(.glass)
-//                    Button(action:
-//                            { viewModel.timeRemaining = viewModel.concentrationDuration
-//                        viewModel.isRunning = false
-//                        
-//                    }) {
-//                        ZStack {
-//                            RoundedRectangle(cornerRadius: 25, style: .continuous)
-//                                .frame(width: 50, height: 50)
-//                                .opacity(0)
-//                            Image(systemName: "arrow.clockwise")
-//                                .font(.system(size: 20))
-//                                .foregroundStyle(.white)
-//                        }
-//                    }
-//                    .buttonStyle(.glass)
                 }
                 
             }
             .padding()
         }
-        
         .onDisappear {
             viewModel.invaliderMinuteur()
         }
@@ -77,3 +70,4 @@ struct TimerView: View {
     TimerView(viewModel: TimerViewModel())
         .background(.black)
 }
+

@@ -14,13 +14,13 @@ struct MenuButton: View {
                 Button {
                     print("Enable geolocation")
                 } label: {
-                    Label("Detect Location", systemImage: "location.circle")
+                    Label("Réglage durée", systemImage: "clock.fill")
                 }
                 
                 Button {
                     print("Enable geolocation")
                 } label: {
-                    Label("Detect Location", systemImage: "location.circle")
+                    Label("Activer la musique", systemImage: "music.note") // désactiver = music.note.slash
                 }
             } label: {
                

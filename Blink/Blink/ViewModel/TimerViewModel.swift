@@ -9,16 +9,15 @@ import Foundation
 
 @Observable
 class TimerViewModel {
-    let concentrationDuration: Int = 25 * 60// 10 secondes
-    let pauseDuration: Int = 5 * 60 // 10 secondes
+    let concentrationDuration: Int = 25 * 60
+    let pauseDuration: Int = 5 * 60 
 
     var timeRemaining: Int = 60
 
-    // État
     var isRunning: Bool = false
     var estEnPause: Bool = false
     var minuteur: Foundation.Timer? = nil
-    // Format du temps
+
     func formatTemps(temps: Int) -> String {
         let minutes = temps / 60
         let seconds = temps % 60

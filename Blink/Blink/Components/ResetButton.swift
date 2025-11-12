@@ -10,13 +10,14 @@ import SwiftUI
 struct ResetButton: View {
     
     var viewModel: TimerViewModel
-  
+    @Bindable var audioManager = AudioManager.shared
 
     var body: some View {
         
             Button(action:
                     { viewModel.timeRemaining = viewModel.concentrationDuration
                 viewModel.isRunning = false
+                audioManager.stop()
                 
             }) {
                 ZStack {

@@ -9,21 +9,31 @@ import SwiftUI
 
 struct MainView: View {
     var viewModel = TimerViewModel()
+    @Bindable var audioManager = AudioManager.shared
     
     var body: some View {
-        VStack {
-            TimerView(viewModel: viewModel)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .overlay(alignment: .topTrailing) {
-            HStack(spacing: 8) {
-                ResetButton(viewModel: viewModel)
-                MenuButton()
+        ZStack {
+            Image("background")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+            
+            VStack {
+                TimerView(viewModel: viewModel)
             }
-            .padding(.trailing, 70)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .overlay(alignment: .topTrailing) {
+                HStack(spacing: 8) {
+                    ResetButton(viewModel: viewModel)
+                    MenuButton()
+                }
+                .padding(.trailing, 70)
+            }
+            .environment(AudioManager.shared)
         }
     }
 }
+
 
 #Preview {
     ZStack {
