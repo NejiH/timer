@@ -8,34 +8,30 @@
 import SwiftUI
 
 struct PlayPauseButton: View {
-    
-    @State private var isPlaying: Bool = false
+    @State private var isPlaying = false
 
     var body: some View {
-        Group {
-            if isPlaying {
-                Button(action: {
-                    isPlaying.toggle()
-                }) {
-                    Image(systemName: "pause.circle.fill")
-                        .resizable()
+            Button(action: { isPlaying.toggle() }) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 25, style: .continuous)
                         .frame(width: 50, height: 50)
-                        .accessibilityLabel("Pause")
-                }
-            } else {
-                Button(action: {
-                    isPlaying.toggle()
-                }) {
-                    Image(systemName: "play.circle.fill")
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .accessibilityLabel("Play")
+                        .glassEffect()
+
+                    Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                        .font(.system(size: 20))
+                        .foregroundStyle(.white)
                 }
             }
-        }
+            .buttonStyle(.plain)
     }
 }
 
 #Preview {
-    PlayPauseButton()
+    ZStack {
+        Image(.background)
+            .resizable()
+            .scaledToFill()
+            .ignoresSafeArea()
+        PlayPauseButton()
+    }
 }
