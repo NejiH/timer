@@ -10,15 +10,27 @@ import SwiftUI
 struct MainView: View {
     var body: some View {
         VStack {
-            Image(systemName: "eye")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Blink app!")
+            Spacer()
+            PlayPauseButton()
         }
-        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+        .overlay(alignment: .topTrailing) {
+            HStack(spacing: 8) {
+                ResetButton()
+                MenuButton()
+            }
+            .padding(.trailing, 70)
+        }
     }
 }
 
 #Preview {
-    MainView()
+    ZStack {
+        Image(.background)
+            .resizable()
+            .scaledToFill()
+            .ignoresSafeArea()
+        MainView()
+    }
 }
