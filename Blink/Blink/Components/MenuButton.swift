@@ -69,7 +69,7 @@ struct MenuButton: View {
                         .opacity(0)
 
 
-                    Text("Réglages")
+                    Image(systemName: "ellipsis")
                         .font(.system(size: 20))
                         .foregroundStyle(viewModel.foregroundColor)
                 }
