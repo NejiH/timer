@@ -9,23 +9,31 @@ import SwiftUI
 
 struct ResetButton: View {
     
+    var viewModel: TimerViewModel
+    @Bindable var audioManager = AudioManager.shared
 
     var body: some View {
         
             Button(action:
-                    { //Logique reset timer
+                    { viewModel.timeRemaining = viewModel.concentrationDuration
+                viewModel.isRunning = false
+                viewModel.estEnPause = false
+                audioManager.stop()
                 
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 25, style: .continuous)
-                        .frame(width: 50, height: 50)
+                        .frame(width: 30, height: 30)
                         .opacity(0)
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 20))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(viewModel.foregroundColor)
+                        
                 }
             }
-            .buttonStyle(.glass)
+//            .buttonStyle(.glass)
+            .accessibilityLabel("Réinitialiser le minuteur")
+            .accessibilityHint("Remet le temps à la durée de concentration initiale.")
     }
 }
 
@@ -35,6 +43,6 @@ struct ResetButton: View {
             .resizable()
             .scaledToFill()
             .ignoresSafeArea()
-        ResetButton()
+        ResetButton(viewModel: TimerViewModel())
     }
 }
