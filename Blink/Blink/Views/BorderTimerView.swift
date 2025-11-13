@@ -241,7 +241,7 @@ struct BorderTimerView: View {
         if width > height {
             return 200
         } else {
-            return 40
+            return 0
         }
     }
 }

@@ -39,18 +39,16 @@ struct TimerView: View {
                             
                         } else {
                             viewModel.demarrer()
-                            
-                            if viewModel.isMusicEnabled {
+                           
+                            if case .image = viewModel.currentBackgroundAsset, viewModel.isMusicEnabled {
+                                
                                 if audioManager.audioPlayer == nil {
                                     audioManager.play(music: "music")
-                                } else {
+                                } else if !audioManager.isPlaying {
                                     audioManager.togglePlayPause()
                                 }
                             }
-                            
-
                         }
-                        
                     }) {
                         PlayPauseButton(viewModel: viewModel)
                     }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum BackgroundContrast {
+enum BackgroundContrast: Equatable {
     case light
     case dark 
 }

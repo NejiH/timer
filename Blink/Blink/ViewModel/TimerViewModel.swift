@@ -23,8 +23,8 @@ class TimerViewModel {
     
     let dureesMinutes = [1, 5, 10, 15, 20, 25, 30, 45, 60]
     
-    var currentBackgroundName: String = "background"
-    var backgroundNames = ["background", "bgmoonmorning", "bgmoonday", "bgmoonnight", "bglight", "bgdark"]
+    let allBackgroundAssets = BackgroundAsset.allCases
+    var currentBackgroundAsset: BackgroundAsset = BackgroundAsset.allCases.first ?? .image(name: "background", contrast: .dark)
     
     private let contrastMap: [String: BackgroundContrast] = [
         "background": .dark,
@@ -36,7 +36,7 @@ class TimerViewModel {
     ]
     
     var foregroundColor: Color {
-        let contrastType = contrastMap[currentBackgroundName] ?? .dark
+        let contrastType = currentBackgroundAsset.contrastType
         
         switch contrastType {
         case .light :
@@ -51,15 +51,32 @@ class TimerViewModel {
         self.timeRemaining = self.concentrationDuration
     }
 
-    func getNextBackgroundName() {
-        guard let currentIndex = backgroundNames.firstIndex(of: currentBackgroundName) else {
-            currentBackgroundName = backgroundNames.first ?? "background"
+    func getNextBackgroundAsset() {
+        guard let currentIndex = allBackgroundAssets.firstIndex(of: currentBackgroundAsset) else {
+            currentBackgroundAsset = allBackgroundAssets.first!
             return
         }
         
-        let nextIndex = (currentIndex + 1) % backgroundNames.count
+        let musicWasActive = AudioManager.shared.isPlaying || AudioManager.shared.shouldBePlaying
         
-        currentBackgroundName = backgroundNames[nextIndex]
+        let nextIndex = (currentIndex + 1) % allBackgroundAssets.count
+        let nextAsset = allBackgroundAssets[nextIndex]
+        
+        switch nextAsset {
+            case .video:
+                if musicWasActive {
+                    AudioManager.shared.stopForVideo()
+                }
+                
+            case .image:
+                if isMusicEnabled {
+                    if musicWasActive {
+                        AudioManager.shared.resumeFromVideo()
+                    } else if AudioManager.shared.audioPlayer == nil {
+                    }
+                }
+        }
+        currentBackgroundAsset = nextAsset
     }
     
     func formatTemps(temps: Int) -> String {
@@ -72,7 +89,7 @@ class TimerViewModel {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
         formatter.unitsStyle = .full
-        formatter.zeroFormattingBehavior = .dropLeading // Laisse tomber le zéro s'il n'y a que des minutes
+        formatter.zeroFormattingBehavior = .dropLeading
 
         return formatter.string(from: TimeInterval(temps)) ?? "\(temps) secondes"
     }

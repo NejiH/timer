@@ -69,12 +69,11 @@ struct MenuButton: View {
                         .opacity(0)
 
 
-                    Text("Réglages")
+                    Image(systemName: "ellipsis")
                         .font(.system(size: 20))
                         .foregroundStyle(viewModel.foregroundColor)
                 }
             }
-//            .buttonStyle(.glass)
             .accessibilityLabel("Options")
             .accessibilityHint("Ouvre un menu modifier les réglages de durée et de musique.")
            

@@ -13,7 +13,7 @@ struct ChangeBackgroundButton: View {
         
     var body: some View {
             Button(action: {
-                viewModel.getNextBackgroundName()
+                viewModel.getNextBackgroundAsset()
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 25, style: .continuous)
@@ -25,7 +25,6 @@ struct ChangeBackgroundButton: View {
                         .foregroundStyle(viewModel.foregroundColor)
                 }
             }
-//            .buttonStyle(.glass)
             .accessibilityLabel("Fond d'écran.")
             .accessibilityHint("Bouton pour changer le fond d'écran.")
     }
