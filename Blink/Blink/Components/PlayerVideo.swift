@@ -27,7 +27,10 @@ class PlayerUIView: UIView {
     var playerLayer: AVPlayerLayer!
     init(frame: CGRect, videoName: String, videoType: String) {
         super.init(frame: frame)
-        guard let url = Bundle.main.url(forResource: videoName, withExtension: videoType) else { return
+        guard let url = Bundle.main.url(forResource: videoName, withExtension: videoType) else {
+            // Si la vidéo ne s'affiche pas, c'est que cette ligne retourne `nil`.
+            print("❌ Erreur: Le fichier \(videoName).\(videoType) n'a pas été trouvé dans le bundle.")
+            return
         }
         self.player = AVPlayer(url: url)
         self.playerLayer = AVPlayerLayer(player: player)

@@ -44,6 +44,6 @@ struct BackgroundView: View {
 }
 
 #Preview {
-    var viewModel = TimerViewModel()
+    let viewModel = TimerViewModel()
     BackgroundView(backgroundAsset: viewModel.currentBackgroundAsset)
 }
