@@ -10,25 +10,26 @@ import SwiftUI
 struct MenuButton: View {
     @Bindable var viewModel: TimerViewModel
     @Bindable var audioManager: AudioManager
-        
+            
     var body: some View {
         ZStack {
             Menu {
                 Picker("Durée concentration", selection: $viewModel.concentrationDuration) {
                     ForEach(viewModel.dureesMinutes, id: \.self) { minutes in
                         Text("\(minutes) min")
-                            .tag(minutes * 60) 
+                            .tag(minutes * 60)
                     }
                 }
                 .pickerStyle(.menu)
                 .onChange(of: viewModel.concentrationDuration) {
-                    if !viewModel.isRunning {
-                            viewModel.currentTimerType = .concentration
-                        }
-                    viewModel.reinitialiseerAvecNouvelleDuree()
-                    
                     let minutes = viewModel.concentrationDuration / 60
-                    viewModel.annoncer(message: "Durée de concentration définie à \(minutes) minutes.")
+                    
+                    if !viewModel.isRunning && viewModel.currentTimerType == .concentration {
+                        viewModel.reinitialiseerAvecNouvelleDuree()
+                        viewModel.annoncer(message: "Durée de concentration définie à \(minutes) minutes. Temps mis à jour.")
+                    } else {
+                        viewModel.annoncer(message: "Durée de concentration définie à \(minutes) minutes.")
+                    }
                 }
                 .accessibilityLabel("Durée du temps de concentration")
                 
@@ -40,14 +41,14 @@ struct MenuButton: View {
                 }
                 .pickerStyle(.menu)
                 .onChange(of: viewModel.pauseDuration) {
-                    if !viewModel.isRunning {
-                            viewModel.currentTimerType = .pause
-                        }
-                    viewModel.reinitialiseerAvecNouvelleDuree()
-
                     let minutes = viewModel.pauseDuration / 60
-                    
-                    viewModel.annoncer(message: "Durée de pause définie à \(minutes) minutes.")
+
+                    if !viewModel.isRunning && viewModel.currentTimerType == .pause {
+                        viewModel.reinitialiseerAvecNouvelleDuree()
+                        viewModel.annoncer(message: "Durée de pause définie à \(minutes) minutes. Temps mis à jour.")
+                    } else {
+                        viewModel.annoncer(message: "Durée de pause définie à \(minutes) minutes.")
+                    }
                 }
                 .accessibilityLabel("Durée du temps de pause")
                 
@@ -70,9 +71,9 @@ struct MenuButton: View {
                 .accessibilityLabel("Activer ou désactivier la musique")
                 
             } label: {
-               
+                
                 ZStack {
-                   
+                    
                     RoundedRectangle(cornerRadius: 25, style: .continuous)
                         .frame(width: 30, height: 30)
                         .opacity(0)
@@ -85,7 +86,7 @@ struct MenuButton: View {
             }
             .accessibilityLabel("Options")
             .accessibilityHint("Ouvre un menu modifier les réglages de durée et de musique.")
-           
+            
         }
     }
 }
