@@ -9,9 +9,17 @@ import SwiftUI
 
 @main
 struct BlinkApp: App {
+    @State private var viewModel = TimerViewModel()
+    @State private var audioManager = AudioManager()
+    
     var body: some Scene {
         WindowGroup {
-            MainView()
+            NavigationStack {
+                MainView()
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+            .environment(viewModel)
+            .environment(audioManager)
         }
     }
 }

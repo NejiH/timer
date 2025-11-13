@@ -1,1 +1,25 @@
+# macOS
 .DS_Store
+
+# Xcode user data
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+*.xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# Build files
+DerivedData/
+build/
+
+# Xcode project settings
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.moved-aside
+*.hmap
+*.ipa
+
+# Others
+*.plist

@@ -21,13 +21,13 @@ struct RoundedBorderShape: Shape {
         let height = rect.height
         let radius = min(cornerRadius, min(width, height) / 2)
         
-        // Commence en haut au centre
+            // Commence en haut au centre
         path.move(to: CGPoint(x: width / 2, y: 0))
         
-        // Ligne vers le coin haut-droit
+            // Ligne vers le coin haut-droit
         path.addLine(to: CGPoint(x: width - radius, y: 0))
         
-        // Arc coin haut-droit
+            // Arc coin haut-droit
         path.addArc(
             center: CGPoint(x: width - radius, y: radius),
             radius: radius,
@@ -36,10 +36,10 @@ struct RoundedBorderShape: Shape {
             clockwise: false
         )
         
-        // Ligne vers le coin bas-droit
+            // Ligne vers le coin bas-droit
         path.addLine(to: CGPoint(x: width, y: height - radius))
         
-        // Arc coin bas-droit
+            // Arc coin bas-droit
         path.addArc(
             center: CGPoint(x: width - radius, y: height - radius),
             radius: radius,
@@ -48,10 +48,10 @@ struct RoundedBorderShape: Shape {
             clockwise: false
         )
         
-        // Ligne vers le coin bas-gauche
+            // Ligne vers le coin bas-gauche
         path.addLine(to: CGPoint(x: radius, y: height))
         
-        // Arc coin bas-gauche
+            // Arc coin bas-gauche
         path.addArc(
             center: CGPoint(x: radius, y: height - radius),
             radius: radius,
@@ -60,10 +60,10 @@ struct RoundedBorderShape: Shape {
             clockwise: false
         )
         
-        // Ligne vers le coin haut-gauche
+            // Ligne vers le coin haut-gauche
         path.addLine(to: CGPoint(x: 0, y: radius))
         
-        // Arc coin haut-gauche
+            // Arc coin haut-gauche
         path.addArc(
             center: CGPoint(x: radius, y: radius),
             radius: radius,
@@ -72,7 +72,7 @@ struct RoundedBorderShape: Shape {
             clockwise: false
         )
         
-        // Ligne de retour au point de départ
+            // Ligne de retour au point de départ
         path.addLine(to: CGPoint(x: width / 2, y: 0))
         
         return path
@@ -108,14 +108,14 @@ struct AnimatedBorderView: View {
     
     var body: some View {
         ZStack {
-            // Fond gris - RoundedBorderShape
+                // Fond gris - RoundedBorderShape
             if showBackground {
                 RoundedBorderShape(cornerRadius: cornerRadius)
                     .stroke(color.opacity(0.3), lineWidth: lineWidth)
                     .padding(inset)
             }
             
-            // Bordure rouge animée avec progression - utilise la  MÊME forme que RoundedBorderShape
+                // Bordure rouge animée avec progression - utilise la  même forme que RoundedBorderShape
             RoundedBorderShape(cornerRadius: cornerRadius)
                 .trim(from: 0, to: progress)
                 .stroke(
@@ -126,7 +126,7 @@ struct AnimatedBorderView: View {
                     )
                 )
                 .padding(inset)
-                .animation(.linear(duration: 0.1), value: progress)
+                .animation(.linear(duration: 1.0), value: progress)
         }
     }
 }
@@ -151,19 +151,15 @@ struct ProgressBarView: View {
     
     var body: some View {
         VStack(spacing: 8) {
-                // Affichage du pourcentage
             Text("\(Int(progress * 100))%")
                 .font(.system(size: 48, weight: .bold))
                 .foregroundColor(.white)
             
-                // Barre visuelle
             ZStack(alignment: .leading) {
-                    // Fond de la barre
                 RoundedRectangle(cornerRadius: 4)
                     .fill(color.opacity(0.3))
                     .frame(height: 8)
                 
-                    // Progression
                 RoundedRectangle(cornerRadius: 4)
                     .fill(color)
                     .frame(width: width * progress)
@@ -177,45 +173,49 @@ struct ProgressBarView: View {
     // MARK: - Border Timer View
 
 struct BorderTimerView: View {
-        // Paramètres configurables (à lier avec les réglages utilisateur)
-    let focusDuration: TimeInterval // Durée de concentration en secondes
-    let pauseDuration: TimeInterval // Durée de pause en secondes
-    let cornerRadius: CGFloat // Radius des coins
-    let lineWidth: CGFloat // Épaisseur de la bordure
-    let inset: CGFloat // Marge intérieure
+        // ViewModel pour synchroniser avec le timer principal
+    var viewModel: TimerViewModel
     
-    @State private var currentSecond: Double = 0
-    @State private var isPause: Bool = false // true = pause, false = focus
-    
-    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    let cornerRadius: CGFloat
+    let lineWidth: CGFloat
+    let inset: CGFloat
     
     init(
-        focusDuration: TimeInterval = 25 * 60, // 25 minutes par défaut
-        pauseDuration: TimeInterval = 5 * 60,   // 5 minutes par défaut
-        cornerRadius: CGFloat = 60,             // Optimisé pour iPhone
-        lineWidth: CGFloat = 6,                 // Épaisseur optimale
-        inset: CGFloat = 1                      // Inset minimal
+        viewModel: TimerViewModel,
+        cornerRadius: CGFloat = 60,
+        lineWidth: CGFloat = 6,
+        inset: CGFloat = 1
     ) {
-        self.focusDuration = focusDuration
-        self.pauseDuration = pauseDuration
+        self.viewModel = viewModel
         self.cornerRadius = cornerRadius
         self.lineWidth = lineWidth
         self.inset = inset
     }
     
-        /// Durée totale du cycle en cours (focus ou pause)
+        /// Durée totale du cycle en cours (focus ou pause) - récupérée depuis viewModel
     private var currentCycleDuration: TimeInterval {
-        isPause ? pauseDuration : focusDuration
+        viewModel.estEnPause
+        ? TimeInterval(viewModel.pauseDuration)
+        : TimeInterval(viewModel.concentrationDuration)
     }
     
-        /// Calcule le progrès (0.0 à 1.0) en fonction du cycle actuel
+        /// Calcule le progrès (0.0 à 1.0) basé sur le temps écoulé
     private var progress: Double {
-        currentSecond / currentCycleDuration
+        let totalDuration = currentCycleDuration
+        let timeElapsed = totalDuration - TimeInterval(viewModel.timeRemaining)
+        
+            // Si aucun temps n'a été écoulé, on est au début
+        if timeElapsed == 0 {
+            return 0
+        }
+        
+        let calculatedProgress = timeElapsed / totalDuration
+        return max(0, min(1, calculatedProgress))
     }
     
         /// Couleur selon le type de cycle
     private var currentColor: Color {
-        isPause ? .green : .red
+        viewModel.estEnPause ? .green : .red
     }
     
     var body: some View {
@@ -231,15 +231,6 @@ struct BorderTimerView: View {
             )
             .padding(.horizontal, calculatePadding(for: geometry.size))
         }
-        .onReceive(timer) { _ in
-            currentSecond += 0.1
-            
-                // Quand le cycle est terminé, bascule vers l'autre
-            if currentSecond >= currentCycleDuration {
-                currentSecond = 0
-                isPause.toggle()
-            }
-        }
     }
     
         /// Calcule le padding selon la largeur de l'écran
@@ -247,19 +238,17 @@ struct BorderTimerView: View {
         let width = size.width
         let height = size.height
         
-        // Si l'écran est plus large que haut = paysage
         if width > height {
-            return 200  // Testez: 180, 200, 220, 240...
+            return 200
         } else {
-            // PORTRAIT: fonctionne parfaitement
-            return 60
+            return 40
         }
     }
 }
-    
-    #Preview {
-        ZStack {
-            Color.black.ignoresSafeArea()
-            BorderTimerView()
-        }
+
+#Preview {
+    ZStack {
+        Color.black.ignoresSafeArea()
+        BorderTimerView(viewModel: TimerViewModel())
     }
+}

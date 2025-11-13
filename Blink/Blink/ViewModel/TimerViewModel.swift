@@ -15,7 +15,7 @@ class TimerViewModel {
     var pauseDuration: Int = 5 * 60
 
     var isMusicEnabled: Bool = true
-    var timeRemaining: Int = 60
+    var timeRemaining: Int = 25 * 60
 
     var isRunning: Bool = false
     var estEnPause: Bool = false
@@ -44,6 +44,11 @@ class TimerViewModel {
         case .dark :
             return .white
         }
+    }
+    
+    init() {
+        // Force l'initialisation correcte du timeRemaining
+        self.timeRemaining = self.concentrationDuration
     }
 
     func getNextBackgroundName() {
