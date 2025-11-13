@@ -177,73 +177,89 @@ struct ProgressBarView: View {
     // MARK: - Border Timer View
 
 struct BorderTimerView: View {
-    // Paramètres configurables (à lier avec les réglages utilisateur)
+        // Paramètres configurables (à lier avec les réglages utilisateur)
     let focusDuration: TimeInterval // Durée de concentration en secondes
     let pauseDuration: TimeInterval // Durée de pause en secondes
+    let cornerRadius: CGFloat // Radius des coins
+    let lineWidth: CGFloat // Épaisseur de la bordure
+    let inset: CGFloat // Marge intérieure
     
     @State private var currentSecond: Double = 0
     @State private var isPause: Bool = false // true = pause, false = focus
+    
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
     init(
         focusDuration: TimeInterval = 25 * 60, // 25 minutes par défaut
-        pauseDuration: TimeInterval = 5 * 60    // 5 minutes par défaut
+        pauseDuration: TimeInterval = 5 * 60,   // 5 minutes par défaut
+        cornerRadius: CGFloat = 60,             // Optimisé pour iPhone
+        lineWidth: CGFloat = 6,                 // Épaisseur optimale
+        inset: CGFloat = 1                      // Inset minimal
     ) {
         self.focusDuration = focusDuration
         self.pauseDuration = pauseDuration
+        self.cornerRadius = cornerRadius
+        self.lineWidth = lineWidth
+        self.inset = inset
     }
     
-    /// Durée totale du cycle en cours (focus ou pause)
+        /// Durée totale du cycle en cours (focus ou pause)
     private var currentCycleDuration: TimeInterval {
         isPause ? pauseDuration : focusDuration
     }
     
-    /// Calcule le progrès (0.0 à 1.0) en fonction du cycle actuel
+        /// Calcule le progrès (0.0 à 1.0) en fonction du cycle actuel
     private var progress: Double {
         currentSecond / currentCycleDuration
     }
     
-    /// Couleur selon le type de cycle
+        /// Couleur selon le type de cycle
     private var currentColor: Color {
         isPause ? .green : .red
     }
     
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
-                // Bordure animée personnalisée
-                AnimatedBorderView(
-                    progress: progress,
-                    color: currentColor,
-                    inset: 8
-                )
-                
-                // Barre de progression temporaire (à enlever plus tard)
-                ProgressBarView(
-                    progress: progress,
-                    color: currentColor,
-                    width: geometry.size.width * 0.8
-                )
-            }
+                // Bordure animée qui s'adapte à l'orientation
+            AnimatedBorderView(
+                progress: progress,
+                color: currentColor,
+                cornerRadius: cornerRadius,
+                lineWidth: lineWidth,
+                showBackground: true,
+                inset: inset
+            )
+            .padding(.horizontal, calculatePadding(for: geometry.size))
         }
-        .ignoresSafeArea()
         .onReceive(timer) { _ in
             currentSecond += 0.1
             
-            // Quand le cycle est terminé, bascule vers l'autre
+                // Quand le cycle est terminé, bascule vers l'autre
             if currentSecond >= currentCycleDuration {
                 currentSecond = 0
                 isPause.toggle()
             }
         }
     }
-}
-
-    // MARK: - Preview
-
-#Preview {
-    ZStack {
-        Color.black.ignoresSafeArea()
-        BorderTimerView()
+    
+        /// Calcule le padding selon la largeur de l'écran
+    private func calculatePadding(for size: CGSize) -> CGFloat {
+        let width = size.width
+        let height = size.height
+        
+        // Si l'écran est plus large que haut = paysage
+        if width > height {
+            return 200  // Testez: 180, 200, 220, 240...
+        } else {
+            // PORTRAIT: fonctionne parfaitement
+            return 60
+        }
     }
 }
+    
+    #Preview {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            BorderTimerView()
+        }
+    }
