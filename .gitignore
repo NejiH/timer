@@ -1,1 +1,113 @@
+# ========================================
+# Xcode & Swift / SwiftUI Project .gitignore
+# Compatible with: AVFoundation, AVKit, SPM, CocoaPods, Carthage
+# ========================================
+
+## Build products
+build/
+DerivedData/
+DerivedData/*
+*.xcuserstate
+
+## Xcode user data
+*.xcuserdata/
+*.xcuserdatad/
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+## Project workspace settings (keep project settings shared)
+xcuserdata/
+*.xcworkspace/xcuserdata/
+
+## IDE-specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
 .DS_Store
+
+## Swift Package Manager
+Packages/
+Package.pins
+Package.resolved
+.swiftpm/
+.build/
+
+## CocoaPods
+Pods/
+Podfile.lock
+project.xcworkspace/
+
+## Carthage
+Carthage/Build/
+Carthage/Checkouts/
+Carthage/DerivedData/
+Carthage/Build*
+
+## Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+fastlane/README.md
+
+## Archives and distribution
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.xcarchive
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+## Swift Package Index cache
+.swiftpm/xcode/package.xcworkspace/xcshareddata/swiftpm/Package.resolved
+
+## App-specific files
+# (AVFoundation / AVKit don't need special exclusions, but you can add temp folders)
+Temp/
+tmp/
+*.mov
+*.mp4
+*.wav
+*.aiff
+*.caf
+
+## Environment / API Keys
+.env
+.env.*
+*.key
+*.pem
+*.cer
+*.mobileprovision
+
+## Output / logs
+*.log
+*.out
+*.trace
+*.profile
+*.profdata
+
+## Simulator / device data
+*.xccoverage
+*.xcresult
+*.crash
+*.crashreport
+*.hmap
+
+## Miscellaneous
+*.orig
+*.rej
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.pbxuser
+*~.nib
+
+# ========================================
+# End of .gitignore
+# ========================================
+
