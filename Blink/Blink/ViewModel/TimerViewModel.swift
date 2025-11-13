@@ -20,11 +20,21 @@ class TimerViewModel {
     var isRunning: Bool = false
     var estEnPause: Bool = false
     var minuteur: Foundation.Timer? = nil
+    var currentTimerType: TimerType = .concentration
     
     let dureesMinutes = [1, 5, 10, 15, 20, 25, 30, 45, 60]
     
     let allBackgroundAssets = BackgroundAsset.allCases
     var currentBackgroundAsset: BackgroundAsset = BackgroundAsset.allCases.first ?? .image(name: "background", contrast: .dark)
+    
+    var timerModeText: String {
+            switch currentTimerType {
+            case .concentration:
+                return "Concentration"
+            case .pause:
+                return "Pause"
+            }
+        }
     
     private let contrastMap: [String: BackgroundContrast] = [
         "background": .dark,
@@ -90,17 +100,32 @@ class TimerViewModel {
     }
     
     func reinitialiseerAvecNouvelleDuree() {
-        if !isRunning {
-            timeRemaining = concentrationDuration
-        }
+            guard !isRunning else { return }
+            
+            switch currentTimerType {
+            case .concentration:
+                timeRemaining = concentrationDuration
+                estEnPause = false
+            case .pause:
+                timeRemaining = pauseDuration
+                estEnPause = true
+            }
     }
 
     func demarrer() {
         guard !isRunning else { return }
         isRunning = true
-        programmerHorloge()
         
-        annoncer(message: "Minuteur démarré. Mode Concentration")
+        if currentTimerType == .concentration {
+            estEnPause = false
+          
+            annoncer(message: "Minuteur démarré. Mode Concentration")
+        } else {
+            estEnPause = true
+            annoncer(message: "Minuteur démarré. Mode Pause")
+        }
+        
+        programmerHorloge()
         feedbackHaptique(style: .medium)
     }
 
@@ -125,28 +150,74 @@ class TimerViewModel {
         minuteur?.invalidate()
         minuteur = nil
     }
-
+    
+//    func tictac() {
+//        guard isRunning else { return }
+//        
+//        if timeRemaining > 0 {
+//            timeRemaining -= 1
+//            
+//            if timeRemaining == 0 {
+//                if currentTimerType == .concentration {
+//                    currentTimerType = .pause
+//                    timeRemaining = pauseDuration
+//                }
+//                
+//            }
+//            
+//            
+//        } else {
+//            if estEnPause {
+//                invaliderMinuteur()
+//                isRunning = false
+//                estEnPause = false
+//                timeRemaining = concentrationDuration
+//                
+//                annoncer(message: "Fin de la pause, début du temps de concentration")
+//            } else {
+//                estEnPause = true
+//                timeRemaining = pauseDuration
+//                
+//                annoncer(message: "Fin du temps de concentration, début du temps de pause")
+//                
+//            }
+//        }
+//    }
+    
     func tictac() {
         guard isRunning else { return }
-
+        
         if timeRemaining > 0 {
             timeRemaining -= 1
             
-            
-        } else {
-            if estEnPause {
-                invaliderMinuteur()
-                isRunning = false
-                estEnPause = false
-                timeRemaining = concentrationDuration
+            // 🎯 LOGIQUE DE TRANSITION : Quand le temps arrive à zéro
+            if timeRemaining == 0 {
                 
-                annoncer(message: "Fin de la pause, début du temps de concentration")
-            } else {
-                estEnPause = true
-                timeRemaining = pauseDuration
-                
-                annoncer(message: "Fin du temps de concentration, début du temps de pause")
-               
+                if currentTimerType == .concentration {
+                    // FIN de la CONCENTRATION -> Début de la PAUSE
+                    
+                    currentTimerType = .pause
+                    estEnPause = true // Début de la pause
+                    timeRemaining = pauseDuration
+                    
+                    annoncer(message: "Fin du temps de concentration, début du temps de pause")
+                    feedbackHaptique(style: .medium)
+                    
+                } else if currentTimerType == .pause {
+                    // FIN de la PAUSE -> Retour à la Concentration (et arrêt ou redémarrage selon votre logique)
+                    
+                    // Arrêter le minuteur
+                    invaliderMinuteur()
+                    isRunning = false // S'arrête après la pause
+                    
+                    // Réinitialiser pour la prochaine session de concentration
+                    currentTimerType = .concentration
+                    estEnPause = false // Fin de la pause
+                    timeRemaining = concentrationDuration
+                    
+                    annoncer(message: "Fin de la pause. Le minuteur est arrêté.")
+                    feedbackHaptique(style: .heavy)
+                }
             }
         }
     }

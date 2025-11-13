@@ -22,6 +22,9 @@ struct MenuButton: View {
                 }
                 .pickerStyle(.menu)
                 .onChange(of: viewModel.concentrationDuration) {
+                    if !viewModel.isRunning {
+                            viewModel.currentTimerType = .concentration
+                        }
                     viewModel.reinitialiseerAvecNouvelleDuree()
                     
                     let minutes = viewModel.concentrationDuration / 60
@@ -37,7 +40,13 @@ struct MenuButton: View {
                 }
                 .pickerStyle(.menu)
                 .onChange(of: viewModel.pauseDuration) {
+                    if !viewModel.isRunning {
+                            viewModel.currentTimerType = .pause
+                        }
+                    viewModel.reinitialiseerAvecNouvelleDuree()
+
                     let minutes = viewModel.pauseDuration / 60
+                    
                     viewModel.annoncer(message: "Durée de pause définie à \(minutes) minutes.")
                 }
                 .accessibilityLabel("Durée du temps de pause")
