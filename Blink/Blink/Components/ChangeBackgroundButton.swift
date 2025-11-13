@@ -13,7 +13,7 @@ struct ChangeBackgroundButton: View {
         
     var body: some View {
             Button(action: {
-                viewModel.getNextBackgroundName()
+                viewModel.getNextBackgroundAsset()
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 25, style: .continuous)

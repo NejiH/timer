@@ -20,6 +20,7 @@ class AudioManager {
     var audioPlayer: AVAudioPlayer?
     /// Un indicateur pour suivre si la musique est en cours de lecture.
     var isPlaying = false
+    var shouldBePlaying: Bool = false
     
     /// Initialisateur privé pour empêcher la création d'instances multiples.
     init() {
@@ -44,6 +45,7 @@ class AudioManager {
         if let player = audioPlayer, !player.isPlaying {
             player.play()
             isPlaying = true
+            shouldBePlaying = true
             return
         }
         
@@ -71,6 +73,7 @@ class AudioManager {
     func pause() {
         audioPlayer?.pause()
         isPlaying = false
+        shouldBePlaying = false
     }
     
     /**
@@ -82,6 +85,20 @@ class AudioManager {
         
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         isPlaying = false
+        shouldBePlaying = false
+    }
+    
+    func stopForVideo() { // Nouvelle fonction pour un arrêt non permanent
+        audioPlayer?.pause() // Utilisez pause pour garder la position de lecture
+        isPlaying = false
+        // shouldBePlaying n'est PAS modifié ici, il reste TRUE
+    }
+    
+    func resumeFromVideo() { // Nouvelle fonction pour la reprise
+        if shouldBePlaying { // Seulement si la musique DOIT être jouée
+            audioPlayer?.play()
+            isPlaying = true
+        }
     }
     
     /**

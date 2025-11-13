@@ -23,8 +23,8 @@ class TimerViewModel {
     
     let dureesMinutes = [1, 5, 10, 15, 20, 25, 30, 45, 60]
     
-    var currentBackgroundName: String = "background"
-    var backgroundNames = ["background", "bgmoonmorning", "bgmoonday", "bgmoonnight", "bglight", "bgdark"]
+    let allBackgroundAssets = BackgroundAsset.allCases
+    var currentBackgroundAsset: BackgroundAsset = BackgroundAsset.allCases.first ?? .image(name: "background", contrast: .dark)
     
     private let contrastMap: [String: BackgroundContrast] = [
         "background": .dark,
@@ -36,7 +36,7 @@ class TimerViewModel {
     ]
     
     var foregroundColor: Color {
-        let contrastType = contrastMap[currentBackgroundName] ?? .dark
+        let contrastType = currentBackgroundAsset.contrastType
         
         switch contrastType {
         case .light :
@@ -45,16 +45,42 @@ class TimerViewModel {
             return .white
         }
     }
-
-    func getNextBackgroundName() {
-        guard let currentIndex = backgroundNames.firstIndex(of: currentBackgroundName) else {
-            currentBackgroundName = backgroundNames.first ?? "background"
+    
+    func getNextBackgroundAsset() {
+        // 1. Logique pour trouver le prochain asset
+        guard let currentIndex = allBackgroundAssets.firstIndex(of: currentBackgroundAsset) else {
+            currentBackgroundAsset = allBackgroundAssets.first!
             return
         }
         
-        let nextIndex = (currentIndex + 1) % backgroundNames.count
+        let musicWasActive = AudioManager.shared.isPlaying || AudioManager.shared.shouldBePlaying
         
-        currentBackgroundName = backgroundNames[nextIndex]
+        let nextIndex = (currentIndex + 1) % allBackgroundAssets.count
+        let nextAsset = allBackgroundAssets[nextIndex]
+        
+        // 2. Logique pour GÉRER LA MUSIQUE EN FONCTION DU NOUVEL ASSET
+        switch nextAsset {
+            case .video:
+                // Si la musique jouait, l'arrêter pour la vidéo
+                if musicWasActive {
+                    AudioManager.shared.stopForVideo()
+                }
+                
+            case .image:
+                // Si le fond devient une image, et que la musique est activée dans le TimerViewModel
+                if isMusicEnabled {
+                    // Reprendre si elle était active AVANT l'interruption
+                    if musicWasActive {
+                        AudioManager.shared.resumeFromVideo()
+                    } else if AudioManager.shared.audioPlayer == nil {
+                         // Si c'est la première fois, la démarrer (si on ne veut pas qu'elle reprenne)
+                         // AudioManager.shared.play(music: "music")
+                    }
+                }
+            }
+        
+        // 3. Mettre à jour l'état
+        currentBackgroundAsset = nextAsset
     }
     
     func formatTemps(temps: Int) -> String {
@@ -142,5 +168,11 @@ class TimerViewModel {
         let generator = UIImpactFeedbackGenerator(style: style)
         generator.impactOccurred()
     }
+    
+//    switch changeBackground {
+//    case video:
+//        return 
+//        case photo
+//    }
 }
 

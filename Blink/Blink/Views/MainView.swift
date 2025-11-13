@@ -14,19 +14,9 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Rectangle()
-                    .fill(Color.clear)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .overlay {
-                        Image(decorative: viewModel.currentBackgroundName)
-                            .resizable()
-                            .scaledToFill()
-                            .clipped()
-                    }
-                    .ignoresSafeArea()
-              
                 
-                
+                // AJOUT LA VUE Background
+                BackgroundView(backgroundAsset: viewModel.currentBackgroundAsset)
                 VStack {
                     TimerView(viewModel: viewModel)
                 }
