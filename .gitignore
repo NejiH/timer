@@ -23,3 +23,12 @@ build/
 
 # Others
 *.plist
+
+# --- Xcode project local user data ---
+*.pbxproj
+*.xcuserstate
+*.xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcshareddata/
+*.xcscheme
+*.plist
