@@ -11,7 +11,6 @@ enum BackgroundAsset: CaseIterable, Equatable {
     case image(name: String, contrast: BackgroundContrast)
     case video(name: String, type: String, contrast: BackgroundContrast)
     
-    // Définir la liste de tous les cas pour l'itération
     static var allCases: [BackgroundAsset] {
         return [
             .image(name: "background", contrast: .dark),

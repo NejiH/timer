@@ -88,14 +88,13 @@ class AudioManager {
         shouldBePlaying = false
     }
     
-    func stopForVideo() { // Nouvelle fonction pour un arrêt non permanent
-        audioPlayer?.pause() // Utilisez pause pour garder la position de lecture
+    func stopForVideo() {
+        audioPlayer?.pause()
         isPlaying = false
-        // shouldBePlaying n'est PAS modifié ici, il reste TRUE
     }
     
-    func resumeFromVideo() { // Nouvelle fonction pour la reprise
-        if shouldBePlaying { // Seulement si la musique DOIT être jouée
+    func resumeFromVideo() {
+        if shouldBePlaying { 
             audioPlayer?.play()
             isPlaying = true
         }

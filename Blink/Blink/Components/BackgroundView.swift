@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BackgroundView: View {
     
-    var backgroundAsset: BackgroundAsset // On récupère les valeurs via l'enum
+    var backgroundAsset: BackgroundAsset 
     
     var body: some View {
             Group {

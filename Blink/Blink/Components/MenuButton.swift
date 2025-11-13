@@ -74,7 +74,6 @@ struct MenuButton: View {
                         .foregroundStyle(viewModel.foregroundColor)
                 }
             }
-//            .buttonStyle(.glass)
             .accessibilityLabel("Options")
             .accessibilityHint("Ouvre un menu modifier les réglages de durée et de musique.")
            

@@ -15,7 +15,6 @@ struct MainView: View {
         NavigationStack {
             ZStack {
                 
-                // AJOUT LA VUE Background
                 BackgroundView(backgroundAsset: viewModel.currentBackgroundAsset)
                 VStack {
                     TimerView(viewModel: viewModel)

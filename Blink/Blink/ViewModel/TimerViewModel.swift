@@ -47,7 +47,6 @@ class TimerViewModel {
     }
     
     func getNextBackgroundAsset() {
-        // 1. Logique pour trouver le prochain asset
         guard let currentIndex = allBackgroundAssets.firstIndex(of: currentBackgroundAsset) else {
             currentBackgroundAsset = allBackgroundAssets.first!
             return
@@ -58,28 +57,20 @@ class TimerViewModel {
         let nextIndex = (currentIndex + 1) % allBackgroundAssets.count
         let nextAsset = allBackgroundAssets[nextIndex]
         
-        // 2. Logique pour GÉRER LA MUSIQUE EN FONCTION DU NOUVEL ASSET
         switch nextAsset {
             case .video:
-                // Si la musique jouait, l'arrêter pour la vidéo
                 if musicWasActive {
                     AudioManager.shared.stopForVideo()
                 }
                 
             case .image:
-                // Si le fond devient une image, et que la musique est activée dans le TimerViewModel
                 if isMusicEnabled {
-                    // Reprendre si elle était active AVANT l'interruption
                     if musicWasActive {
                         AudioManager.shared.resumeFromVideo()
                     } else if AudioManager.shared.audioPlayer == nil {
-                         // Si c'est la première fois, la démarrer (si on ne veut pas qu'elle reprenne)
-                         // AudioManager.shared.play(music: "music")
                     }
                 }
             }
-        
-        // 3. Mettre à jour l'état
         currentBackgroundAsset = nextAsset
     }
     
@@ -93,7 +84,7 @@ class TimerViewModel {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
         formatter.unitsStyle = .full
-        formatter.zeroFormattingBehavior = .dropLeading // Laisse tomber le zéro s'il n'y a que des minutes
+        formatter.zeroFormattingBehavior = .dropLeading
 
         return formatter.string(from: TimeInterval(temps)) ?? "\(temps) secondes"
     }
@@ -168,11 +159,5 @@ class TimerViewModel {
         let generator = UIImpactFeedbackGenerator(style: style)
         generator.impactOccurred()
     }
-    
-//    switch changeBackground {
-//    case video:
-//        return 
-//        case photo
-//    }
 }
 

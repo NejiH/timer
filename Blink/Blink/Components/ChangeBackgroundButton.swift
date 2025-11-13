@@ -25,7 +25,6 @@ struct ChangeBackgroundButton: View {
                         .foregroundStyle(viewModel.foregroundColor)
                 }
             }
-//            .buttonStyle(.glass)
             .accessibilityLabel("Fond d'écran.")
             .accessibilityHint("Bouton pour changer le fond d'écran.")
     }

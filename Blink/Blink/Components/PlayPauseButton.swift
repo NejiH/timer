@@ -19,8 +19,7 @@ struct PlayPauseButton: View {
                     Image(systemName: viewModel.isRunning ? "pause.fill" : "play.fill")
                         .font(.system(size: 20))
                         .foregroundStyle(viewModel.foregroundColor)
-                }
-                
+                }       
     }
 }
 
