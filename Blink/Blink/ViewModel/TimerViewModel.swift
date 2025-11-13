@@ -190,29 +190,25 @@ class TimerViewModel {
         if timeRemaining > 0 {
             timeRemaining -= 1
             
-            // 🎯 LOGIQUE DE TRANSITION : Quand le temps arrive à zéro
             if timeRemaining == 0 {
                 
                 if currentTimerType == .concentration {
-                    // FIN de la CONCENTRATION -> Début de la PAUSE
                     
-                    currentTimerType = .pause
-                    estEnPause = true // Début de la pause
+                    currentTimerType = .concentration
+                    estEnPause = true
                     timeRemaining = pauseDuration
                     
                     annoncer(message: "Fin du temps de concentration, début du temps de pause")
                     feedbackHaptique(style: .medium)
                     
                 } else if currentTimerType == .pause {
-                    // FIN de la PAUSE -> Retour à la Concentration (et arrêt ou redémarrage selon votre logique)
-                    
+                  
                     // Arrêter le minuteur
                     invaliderMinuteur()
-                    isRunning = false // S'arrête après la pause
+                    isRunning = false
                     
-                    // Réinitialiser pour la prochaine session de concentration
-                    currentTimerType = .concentration
-                    estEnPause = false // Fin de la pause
+                    currentTimerType = .pause
+                    estEnPause = false
                     timeRemaining = concentrationDuration
                     
                     annoncer(message: "Fin de la pause. Le minuteur est arrêté.")
