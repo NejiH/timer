@@ -12,24 +12,38 @@ struct MainView: View {
     @Bindable var audioManager = AudioManager.shared
     
     var body: some View {
-        ZStack {
-            Image("background")
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
-            
-            VStack {
-                TimerView(viewModel: viewModel)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay(alignment: .topTrailing) {
-                HStack(spacing: 8) {
-                    ResetButton(viewModel: viewModel)
-                    MenuButton()
+        NavigationStack {
+            ZStack {
+                Rectangle()
+                    .fill(Color.clear)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .overlay {
+                        Image(decorative: viewModel.currentBackgroundName)
+                            .resizable()
+                            .scaledToFill()
+                            .clipped()
+                    }
+                    .ignoresSafeArea()
+                
+                
+                VStack {
+                    TimerView(viewModel: viewModel)
                 }
-                .padding(.trailing, 70)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarTrailing) {
+                        ResetButton(viewModel: viewModel)
+                        ChangeBackgroundButton(viewModel: viewModel)
+                }
+                    ToolbarSpacer(.fixed, placement: .topBarTrailing)
+                    
+                    ToolbarItem(placement: .topBarTrailing) {
+                        MenuButton(viewModel: viewModel, audioManager: audioManager)
+                    }
+                    
+                }
+                .environment(AudioManager.shared)
             }
-            .environment(AudioManager.shared)
         }
     }
 }

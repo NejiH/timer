@@ -17,13 +17,18 @@ struct TimerView: View {
             VStack(spacing: 16) {
                 Text(viewModel.estEnPause ? "Pause" : "Concentration")
                     .font(.custom("Bebas Neue", size: 50))
-                    .foregroundStyle(viewModel.estEnPause ? .green : .white)
+                    .foregroundStyle(viewModel.estEnPause ? .green : viewModel.foregroundColor)
+                    .accessibilityValue(viewModel.formatTempsPourVoiceOver(temps: viewModel.timeRemaining))
+                    .accessibilityLabel("État actuel")
 
                 Text(viewModel.formatTemps(temps: viewModel.timeRemaining))
-                    .font(.custom("Bebas Neue", size: 120))
-                    .foregroundColor(.white)
+                    .font(.custom("Bebas Neue", size: 120, relativeTo: .largeTitle))
+                    .foregroundStyle(viewModel.foregroundColor)
                     .contentTransition(.numericText())
                     .animation(.easeInOut, value: viewModel.timeRemaining)
+                    .minimumScaleFactor(0.5)
+                    .accessibilityValue(viewModel.formatTempsPourVoiceOver(temps: viewModel.timeRemaining))
+                    .accessibilityLabel("Temps restant")
 
                 HStack(spacing: 12) {
                     Button(action: {
@@ -35,26 +40,23 @@ struct TimerView: View {
                         } else {
                             viewModel.demarrer()
                             
-                            if audioManager.audioPlayer == nil {
-                                audioManager.play(music: "music")
-                            } else {
-                                audioManager.togglePlayPause()
+                            if viewModel.isMusicEnabled {
+                                if audioManager.audioPlayer == nil {
+                                    audioManager.play(music: "music")
+                                } else {
+                                    audioManager.togglePlayPause()
+                                }
                             }
+                            
 
                         }
                         
                     }) {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 25, style: .continuous)
-                                .frame(width: 50, height: 50)
-                                .opacity(0)
-
-                            Image(systemName: viewModel.isRunning ? "pause.fill" : "play.fill")
-                                .font(.system(size: 20))
-                                .foregroundStyle(.white)
-                        }
+                        PlayPauseButton(viewModel: viewModel)
                     }
                     .buttonStyle(.glass)
+                    .accessibilityLabel(viewModel.isRunning ? "Mettre en pause le minuteur" : "Démarrer le minuteur")
+                    .accessibilityHint("Appuyez pour \(viewModel.isRunning ? "mettre en pause" : "démarrer")")
                 }
                 
             }

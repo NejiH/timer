@@ -8,22 +8,19 @@
 import SwiftUI
 
 struct PlayPauseButton: View {
-    @State private var isPlaying = false
+    var viewModel: TimerViewModel
     
-
     var body: some View {
-            Button(action: { isPlaying.toggle() }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 25, style: .continuous)
                         .frame(width: 50, height: 50)
-                        .glassEffect()
+                        .opacity(0)
 
-                    Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                    Image(systemName: viewModel.isRunning ? "pause.fill" : "play.fill")
                         .font(.system(size: 20))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(viewModel.foregroundColor)
                 }
-            }
-            .buttonStyle(.plain)
+                
     }
 }
 
@@ -33,6 +30,6 @@ struct PlayPauseButton: View {
             .resizable()
             .scaledToFill()
             .ignoresSafeArea()
-        PlayPauseButton()
+        PlayPauseButton(viewModel: TimerViewModel())
     }
 }
