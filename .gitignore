@@ -31,4 +31,5 @@ build/
 *.xcworkspace/xcuserdata/
 *.xcshareddata/
 *.xcscheme
-*.plist
+*.plist.DS_Store
+Blink.xcodeproj/
