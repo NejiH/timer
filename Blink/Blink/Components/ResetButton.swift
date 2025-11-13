@@ -17,7 +17,8 @@ struct ResetButton: View {
             Button(action:
                     { viewModel.timeRemaining = viewModel.concentrationDuration
                 viewModel.isRunning = false
-                viewModel.estEnPause = false
+                viewModel.currentTimerType = .concentration
+//                viewModel.estEnPause = false
                 audioManager.stop()
                 
             }) {

@@ -15,9 +15,9 @@ struct TimerView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 16) {
-                Text(viewModel.estEnPause ? "Pause" : "Concentration")
+                Text(viewModel.currentTimerType == .pause ? "Pause" : "Concentration")
                     .font(.custom("Bebas Neue", size: 50))
-                    .foregroundStyle(viewModel.estEnPause ? .green : viewModel.foregroundColor)
+                    .foregroundStyle(viewModel.currentTimerType == .pause ? .green : viewModel.foregroundColor)
                     .accessibilityValue(viewModel.formatTempsPourVoiceOver(temps: viewModel.timeRemaining))
                     .accessibilityLabel("État actuel")
 

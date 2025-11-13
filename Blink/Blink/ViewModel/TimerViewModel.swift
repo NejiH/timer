@@ -18,7 +18,7 @@ class TimerViewModel {
     var timeRemaining: Int = 60
 
     var isRunning: Bool = false
-    var estEnPause: Bool = false
+//    var estEnPause: Bool = false
     var minuteur: Foundation.Timer? = nil
     var currentTimerType: TimerType = .concentration
     
@@ -105,10 +105,10 @@ class TimerViewModel {
             switch currentTimerType {
             case .concentration:
                 timeRemaining = concentrationDuration
-                estEnPause = false
+//                estEnPause = false
             case .pause:
                 timeRemaining = pauseDuration
-                estEnPause = true
+//                estEnPause = true
             }
     }
 
@@ -117,11 +117,11 @@ class TimerViewModel {
         isRunning = true
         
         if currentTimerType == .concentration {
-            estEnPause = false
+//            estEnPause = false
           
             annoncer(message: "Minuteur démarré. Mode Concentration")
         } else {
-            estEnPause = true
+//            estEnPause = true
             annoncer(message: "Minuteur démarré. Mode Pause")
         }
         
@@ -194,8 +194,8 @@ class TimerViewModel {
                 
                 if currentTimerType == .concentration {
                     
-                    currentTimerType = .concentration
-                    estEnPause = true
+                    currentTimerType = .pause
+//                    estEnPause = true
                     timeRemaining = pauseDuration
                     
                     annoncer(message: "Fin du temps de concentration, début du temps de pause")
@@ -207,8 +207,8 @@ class TimerViewModel {
                     invaliderMinuteur()
                     isRunning = false
                     
-                    currentTimerType = .pause
-                    estEnPause = false
+                    currentTimerType = .concentration
+//                    estEnPause = false
                     timeRemaining = concentrationDuration
                     
                     annoncer(message: "Fin de la pause. Le minuteur est arrêté.")
